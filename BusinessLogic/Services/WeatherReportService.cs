@@ -17,7 +17,7 @@ namespace BusinessLogic.Services
             this.dailyCityWeatherReportRepository = dailyCityWeatherReportRepository;
         }
 
-        public async Task<PeriodWeatherReportDTO> BuildPeriodWeatherReportAsync(string cityName, DateTime fromDate, DateTime toDate)
+        public async Task<PeriodWeatherReportDTO> BuildPeriodWeatherReportAsync(string cityName, DateTime fromDate, DateTime toDate, TemperatureUnit requestedTemperatureUnit)
         {
             var cityNameIsValid = await cityRepository.Contains(cityName);
             if (cityNameIsValid)
@@ -31,6 +31,7 @@ namespace BusinessLogic.Services
                 var numberOfDaysWithPercipitation = dailyReports.Where(dailyReport => dailyReport.Percipitation > 0).Count();
                 var percipitationAverage = dailyReports.Average(dailyReport => dailyReport.Percipitation);
                 var windSpeedAverage = dailyReports.Average(dailyReport => dailyReport.WindSpeedAverage);
+                var temperatureUnit = dailyReports.First().TemperatureUnit;
 
                 var weatherSummary = WeatherSummary.Fair;
 
@@ -44,9 +45,9 @@ namespace BusinessLogic.Services
 
                 return new PeriodWeatherReportDTO
                 {
-                    TemperatureMax = temperatureMax,
-                    TemperatureAverage = temperatureAverage,
-                    TemperatureMin = temperatureMin,
+                    TemperatureMax = ConvertTemperatureToAnotherUnit(temperatureMax, temperatureUnit, requestedTemperatureUnit),
+                    TemperatureAverage = ConvertTemperatureToAnotherUnit(temperatureAverage, temperatureUnit, requestedTemperatureUnit),
+                    TemperatureMin = ConvertTemperatureToAnotherUnit(temperatureMin, temperatureUnit, requestedTemperatureUnit),
                     CloudCoverAverage = cloudCoverAverage,
                     NumberOfDaysWithPercipitation = numberOfDaysWithPercipitation,
                     PercipitationAverage = percipitationAverage,
@@ -58,6 +59,31 @@ namespace BusinessLogic.Services
             {
                 throw new ArgumentException("This service does not have any data for cityName [{cityName}]");
             }
+        }
+
+        private static double ConvertTemperatureToAnotherUnit(double temperature, TemperatureUnit fromUnit, TemperatureUnit toUnit)
+        {
+            return fromUnit switch
+            {
+                TemperatureUnit.Fahrenheit => toUnit switch
+                {
+                    TemperatureUnit.Kelvin => (temperature * (5d / 9d)) - 241.15d,
+                    TemperatureUnit.Celsius => (temperature * (5d / 9d)) - 32d,
+                    _ => temperature,
+                },
+                TemperatureUnit.Kelvin => toUnit switch
+                {
+                    TemperatureUnit.Fahrenheit => (temperature * (9d / 5d)) - 241.15d,
+                    TemperatureUnit.Celsius => temperature - 273.15d,
+                    _ => temperature,
+                },
+                _ => toUnit switch
+                {
+                    TemperatureUnit.Kelvin => temperature + 273.15d,
+                    TemperatureUnit.Fahrenheit => (temperature * (9d / 5d)) + 32d,
+                    _ => temperature,
+                },
+            };
         }
     }
 }

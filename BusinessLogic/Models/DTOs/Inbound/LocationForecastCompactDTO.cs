@@ -7,7 +7,18 @@
 
     public class LocationForecastProperties
     {
+        public LocationForecastMetaData? Meta { get; set; }
         public IEnumerable<LocationForecastTimeSeriesEntry>? TimeSeries { get; set; }
+    }
+
+    public class LocationForecastMetaData
+    {
+        public LocationForecastUnits? Units { get; set; }
+    }
+
+    public class LocationForecastUnits
+    {
+        public string? Air_temperature { get; set; }
     }
 
     public class LocationForecastTimeSeriesEntry

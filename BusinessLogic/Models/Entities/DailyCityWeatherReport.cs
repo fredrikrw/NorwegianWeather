@@ -1,4 +1,6 @@
-﻿namespace BusinessLogic.Models.Entities
+﻿using BusinessLogic.Models.Enums;
+
+namespace BusinessLogic.Models.Entities
 {
     public class DailyCityWeatherReport
     {
@@ -10,5 +12,6 @@
         public double CloudCoverAverage { get; set; }
         public double Percipitation { get; set; }
         public double WindSpeedAverage { get; set; }
+        public TemperatureUnit TemperatureUnit { get; set; }
     }
 }

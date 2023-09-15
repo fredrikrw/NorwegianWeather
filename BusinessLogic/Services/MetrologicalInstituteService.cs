@@ -3,6 +3,7 @@ using BusinessLogic.Interfaces.Repositories;
 using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Models.DTOs.Inbound;
 using BusinessLogic.Models.Entities;
+using BusinessLogic.Models.Enums;
 
 namespace BusinessLogic.Services
 {
@@ -12,7 +13,10 @@ namespace BusinessLogic.Services
         private readonly IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient;
         private readonly IDailyCityWeatherReportRepository dailyCityWeatherReportRepository;
 
-        public MetrologicalInstituteService(ICityRepository cityRepository, IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient, IDailyCityWeatherReportRepository dailyCityWeatherReportRepository)
+        public MetrologicalInstituteService(
+            ICityRepository cityRepository, 
+            IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient, 
+            IDailyCityWeatherReportRepository dailyCityWeatherReportRepository)
         {
             this.cityRepository = cityRepository;
             this.metrologicalInstituteHttpClient = metrologicalInstituteHttpClient;
@@ -40,11 +44,12 @@ namespace BusinessLogic.Services
 
             var timeSeriesForTommorrow = locationForecast.Properties.TimeSeries.Where(timeSeries => timeSeries.Time.Value.Date == tommorrow).ToList();
 
-            return BuildDailyCityWeatherReports(timeSeriesForTommorrow, city.Name);
+            var temperatureUnit = ConvertMetrologicalInstituteTemperatureUnitToTemperatureUnitEnum(locationForecast.Properties.Meta.Units.Air_temperature);
+
+            return BuildDailyCityWeatherReports(timeSeriesForTommorrow, city.Name, temperatureUnit);
         }
 
-
-        private static DailyCityWeatherReport BuildDailyCityWeatherReports(List<LocationForecastTimeSeriesEntry> timeSeries, string cityName)
+        private static DailyCityWeatherReport BuildDailyCityWeatherReports(List<LocationForecastTimeSeriesEntry> timeSeries, string cityName, TemperatureUnit temperatureUnit)
         {
             var city = cityName;
             var date = timeSeries.First().Time.Value.Date;
@@ -65,6 +70,17 @@ namespace BusinessLogic.Services
                 CloudCoverAverage = cloudCoverAverage,
                 Percipitation = percipitation,
                 WindSpeedAverage = windSpeedAverage,
+                TemperatureUnit = temperatureUnit,
+            };
+        }
+
+        private static TemperatureUnit ConvertMetrologicalInstituteTemperatureUnitToTemperatureUnitEnum(string temperatureUnit)
+        {
+            return temperatureUnit.ToUpper() switch
+            {
+                "K" => TemperatureUnit.Kelvin,
+                "F" => TemperatureUnit.Fahrenheit,
+                _ => TemperatureUnit.Celsius,
             };
         }
     }
