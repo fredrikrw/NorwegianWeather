@@ -2,40 +2,40 @@
 {
     public class LocationForecastCompactDTO
     {
-        public LocationForecastProperties? Properties { get; set; }
+        public LocationForecastProperties Properties { get; set; }
     }
 
     public class LocationForecastProperties
     {
-        public LocationForecastMetaData? Meta { get; set; }
-        public IEnumerable<LocationForecastTimeSeriesEntry>? TimeSeries { get; set; }
+        public LocationForecastMetaData Meta { get; set; }
+        public IEnumerable<LocationForecastTimeSeriesEntry> TimeSeries { get; set; }
     }
 
     public class LocationForecastMetaData
     {
-        public LocationForecastUnits? Units { get; set; }
+        public LocationForecastUnits Units { get; set; }
     }
 
     public class LocationForecastUnits
     {
-        public string? Air_temperature { get; set; }
+        public string Air_temperature { get; set; }
     }
 
     public class LocationForecastTimeSeriesEntry
     {
         public DateTime? Time { get; set; }
-        public LocationForecastTimeSeriesEntryData? Data { get; set; }
+        public LocationForecastTimeSeriesEntryData Data { get; set; }
     }
 
     public class LocationForecastTimeSeriesEntryData
     {
-        public LocationForecastInstant? Instant { get; set; }
-        public LocationForecastNext1Hours? Next_1_hours { get; set; }
+        public LocationForecastInstant Instant { get; set; }
+        public LocationForecastNext1Hours Next_1_hours { get; set; }
     }
 
     public class LocationForecastInstant
     {
-        public LocationForecastInstantDetails? Details { get; set; }
+        public LocationForecastInstantDetails Details { get; set; }
     }
 
     public class LocationForecastInstantDetails
@@ -47,7 +47,7 @@
 
     public class LocationForecastNext1Hours
     {
-        public LocationForecastNext1HoursDetails? Details { get; set; }
+        public LocationForecastNext1HoursDetails Details { get; set; }
     }
 
     public class LocationForecastNext1HoursDetails
