@@ -57,7 +57,7 @@ namespace BusinessLogic.Services
             }
             else
             {
-                throw new ArgumentException("This service does not have any data for cityName [{cityName}]");
+                throw new ArgumentException($"This service does not have any data for cityName [{cityName}]");
             }
         }
 
