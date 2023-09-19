@@ -2,6 +2,6 @@
 {
     public interface IMetrologicalInstituteService
     {
-        Task RetrieveDataAndBuildDailyReportForTommorrowForAllCities();
+        Task RetrieveDataAndBuildDailyWeatherReportForAllCities();
     }
 }

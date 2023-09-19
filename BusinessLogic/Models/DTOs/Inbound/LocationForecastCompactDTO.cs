@@ -8,7 +8,7 @@
     public class LocationForecastProperties
     {
         public LocationForecastMetaData Meta { get; set; }
-        public IEnumerable<LocationForecastTimeSeriesEntry> TimeSeries { get; set; }
+        public List<LocationForecastTimeSeriesEntry> TimeSeries { get; set; }
     }
 
     public class LocationForecastMetaData

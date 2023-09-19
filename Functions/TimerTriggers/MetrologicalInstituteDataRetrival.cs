@@ -20,7 +20,7 @@ namespace Functions.TimerTriggers
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
-            await metrologicalInstituteService.RetrieveDataAndBuildDailyReportForTommorrowForAllCities();
+            await metrologicalInstituteService.RetrieveDataAndBuildDailyWeatherReportForAllCities();
         }
     }
 }

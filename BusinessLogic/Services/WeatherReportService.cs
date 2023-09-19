@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Interfaces.Infrastructure.Repositories;
 using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Models.DTOs.Outbound;
+using BusinessLogic.Models.Entities;
 using BusinessLogic.Models.Enums;
 using System.Data;
 
@@ -9,59 +10,46 @@ namespace BusinessLogic.Services
     public class WeatherReportService : IWeatherReportService
     {
         private readonly ICityRepository cityRepository;
-        private readonly IDailyCityWeatherReportRepository dailyCityWeatherReportRepository;
+        private readonly IDailyWeatherReportRepository dailyWeatherReportRepository;
 
-        public WeatherReportService(ICityRepository cityRepository, IDailyCityWeatherReportRepository dailyCityWeatherReportRepository)
+        public WeatherReportService(ICityRepository cityRepository, IDailyWeatherReportRepository dailyWeatherReportRepository)
         {
             this.cityRepository = cityRepository;
-            this.dailyCityWeatherReportRepository = dailyCityWeatherReportRepository;
+            this.dailyWeatherReportRepository = dailyWeatherReportRepository;
         }
 
         public async Task<PeriodWeatherReportDTO> BuildPeriodWeatherReportAsync(string cityName, DateTime fromDate, DateTime toDate, TemperatureUnit requestedTemperatureUnit)
         {
-            var cityNameIsValid = await cityRepository.Contains(cityName);
-            if (cityNameIsValid)
-            {
-                var dailyReports = await dailyCityWeatherReportRepository.GetDailyCityWeatherReportsAsync(cityName, fromDate, toDate);
+            var isCityNameInvalid = await CheckIfCityNameIsInvalidAsync(cityName);
 
-                var temperatureMax = dailyReports.Max(dailyReport => dailyReport.TemperatureMax);
-                var temperatureAverage = dailyReports.Average(dailyReport => dailyReport.TemperatureAverage);
-                var temperatureMin = dailyReports.Min(dailyReport => dailyReport.TemperatureMin);
-                var cloudCoverAverage = dailyReports.Average(dailyReport => dailyReport.CloudCoverAverage);
-                var numberOfDaysWithPercipitation = dailyReports.Where(dailyReport => dailyReport.Percipitation > 0).Count();
-                var percipitationAverage = dailyReports.Average(dailyReport => dailyReport.Percipitation);
-                var windSpeedAverage = dailyReports.Average(dailyReport => dailyReport.WindSpeedAverage);
-                var temperatureUnit = dailyReports.First().TemperatureUnit;
+            if (isCityNameInvalid) throw new ArgumentException($"This service does not have any data for cityName [{cityName}]");
 
-                var weatherSummary = WeatherSummary.Fair;
+            var dailyReports = await RetrieveDailyWeatherReportsForPeriod(cityName, fromDate, toDate);
 
-                if (numberOfDaysWithPercipitation >= (dailyReports.Count() / 2) || cloudCoverAverage > 75 || windSpeedAverage >= 10)
-                {
-                    weatherSummary = WeatherSummary.Bad;
-                }else if (numberOfDaysWithPercipitation < (dailyReports.Count() / 4) && cloudCoverAverage < 25 &&  windSpeedAverage < 10)
-                {
-                    weatherSummary = WeatherSummary.Great;
-                }
+            dailyReports = dailyReports.Select(dailyReport => ConvertTemperaturesInDailyWeatherReport(dailyReport, requestedTemperatureUnit)).ToList();
 
-                return new PeriodWeatherReportDTO
-                {
-                    TemperatureMax = ConvertTemperatureToAnotherUnit(temperatureMax, temperatureUnit, requestedTemperatureUnit),
-                    TemperatureAverage = ConvertTemperatureToAnotherUnit(temperatureAverage, temperatureUnit, requestedTemperatureUnit),
-                    TemperatureMin = ConvertTemperatureToAnotherUnit(temperatureMin, temperatureUnit, requestedTemperatureUnit),
-                    CloudCoverAverage = cloudCoverAverage,
-                    NumberOfDaysWithPercipitation = numberOfDaysWithPercipitation,
-                    PercipitationAverage = percipitationAverage,
-                    WindSpeedAverage = windSpeedAverage,
-                    WeatherSummary = weatherSummary,
-                };
-            }
-            else
-            {
-                throw new ArgumentException($"This service does not have any data for cityName [{cityName}]");
-            }
+            return BuildPeriodWeatherReport(dailyReports);
         }
 
-        private static double ConvertTemperatureToAnotherUnit(double temperature, TemperatureUnit fromUnit, TemperatureUnit toUnit)
+        public async Task<bool> CheckIfCityNameIsInvalidAsync(string cityName)
+        {
+            return (await cityRepository.Contains(cityName)) == false;
+        }
+
+        public async Task<List<DailyWeatherReport>> RetrieveDailyWeatherReportsForPeriod(string cityName, DateTime fromDate, DateTime toDate)
+        {
+            return await dailyWeatherReportRepository.GetDailyWeatherReportsAsync(cityName, fromDate, toDate);
+        }
+
+        public static DailyWeatherReport ConvertTemperaturesInDailyWeatherReport(DailyWeatherReport dailyWeatherReport, TemperatureUnit requestedTemperatureUnit)
+        {
+            dailyWeatherReport.TemperatureMax = ConvertTemperatureToAnotherUnit(dailyWeatherReport.TemperatureMax, dailyWeatherReport.TemperatureUnit, requestedTemperatureUnit);
+            dailyWeatherReport.TemperatureAverage = ConvertTemperatureToAnotherUnit(dailyWeatherReport.TemperatureAverage, dailyWeatherReport.TemperatureUnit, requestedTemperatureUnit);
+            dailyWeatherReport.TemperatureMin = ConvertTemperatureToAnotherUnit(dailyWeatherReport.TemperatureMin, dailyWeatherReport.TemperatureUnit, requestedTemperatureUnit);
+            return dailyWeatherReport;
+        }
+
+        public static double ConvertTemperatureToAnotherUnit(double temperature, TemperatureUnit fromUnit, TemperatureUnit toUnit)
         {
             return fromUnit switch
             {
@@ -83,6 +71,42 @@ namespace BusinessLogic.Services
                     TemperatureUnit.Fahrenheit => (temperature * (9d / 5d)) + 32d,
                     _ => temperature,
                 },
+            };
+        }
+
+        public static PeriodWeatherReportDTO BuildPeriodWeatherReport(List<DailyWeatherReport> dailyWeatherReports)
+        {
+
+            var temperatureMax = dailyWeatherReports.Max(dailyReport => dailyReport.TemperatureMax);
+            var temperatureAverage = dailyWeatherReports.Average(dailyReport => dailyReport.TemperatureAverage);
+            var temperatureMin = dailyWeatherReports.Min(dailyReport => dailyReport.TemperatureMin);
+            var cloudCoverAverage = dailyWeatherReports.Average(dailyReport => dailyReport.CloudCoverAverage);
+            var numberOfDaysWithPercipitation = dailyWeatherReports.Where(dailyReport => dailyReport.Percipitation > 0).Count();
+            var percipitationAverage = dailyWeatherReports.Average(dailyReport => dailyReport.Percipitation);
+            var windSpeedAverage = dailyWeatherReports.Average(dailyReport => dailyReport.WindSpeedAverage);
+            var temperatureUnit = dailyWeatherReports.First().TemperatureUnit;
+
+            var weatherSummary = WeatherSummary.Fair;
+
+            if (numberOfDaysWithPercipitation >= (dailyWeatherReports.Count / 2) || cloudCoverAverage > 75 || windSpeedAverage >= 10)
+            {
+                weatherSummary = WeatherSummary.Bad;
+            }
+            else if (numberOfDaysWithPercipitation < (dailyWeatherReports.Count / 4) && cloudCoverAverage < 25 && windSpeedAverage < 10)
+            {
+                weatherSummary = WeatherSummary.Great;
+            }
+
+            return new PeriodWeatherReportDTO
+            {
+                TemperatureMax = temperatureMax,
+                TemperatureAverage = temperatureAverage,
+                TemperatureMin = temperatureMin,
+                CloudCoverAverage = cloudCoverAverage,
+                NumberOfDaysWithPercipitation = numberOfDaysWithPercipitation,
+                PercipitationAverage = percipitationAverage,
+                WindSpeedAverage = windSpeedAverage,
+                WeatherSummary = weatherSummary,
             };
         }
     }

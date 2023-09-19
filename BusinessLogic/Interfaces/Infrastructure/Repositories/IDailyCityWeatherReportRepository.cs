@@ -2,10 +2,10 @@
 
 namespace BusinessLogic.Interfaces.Infrastructure.Repositories
 {
-    public interface IDailyCityWeatherReportRepository
+    public interface IDailyWeatherReportRepository
     {
-        public Task<IEnumerable<DailyCityWeatherReport>> GetDailyCityWeatherReportsAsync(string cityName, DateTime fromDate, DateTime toDate);
+        public Task<List<DailyWeatherReport>> GetDailyWeatherReportsAsync(string cityName, DateTime fromDate, DateTime toDate);
 
-        public Task InsertDailyCityWeatherReportsAsync(IEnumerable<DailyCityWeatherReport> dailyCityWeatherReports);
+        public Task InsertDailyWeatherReportsAsync(List<DailyWeatherReport> dailyWeatherReports);
     }
 }

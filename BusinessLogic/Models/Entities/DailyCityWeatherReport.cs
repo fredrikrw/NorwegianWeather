@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Models.Entities
 {
-    public class DailyCityWeatherReport
+    public class DailyWeatherReport
     {
         public string City { get; set; }
         public DateTime Date { get; set; }

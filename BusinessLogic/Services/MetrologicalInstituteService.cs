@@ -11,45 +11,80 @@ namespace BusinessLogic.Services
     {
         private readonly ICityRepository cityRepository;
         private readonly IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient;
-        private readonly IDailyCityWeatherReportRepository dailyCityWeatherReportRepository;
+        private readonly IDailyWeatherReportRepository dailyWeatherReportRepository;
 
         public MetrologicalInstituteService(
-            ICityRepository cityRepository, 
-            IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient, 
-            IDailyCityWeatherReportRepository dailyCityWeatherReportRepository)
+            ICityRepository cityRepository,
+            IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient,
+            IDailyWeatherReportRepository dailyWeatherReportRepository)
         {
             this.cityRepository = cityRepository;
             this.metrologicalInstituteHttpClient = metrologicalInstituteHttpClient;
-            this.dailyCityWeatherReportRepository = dailyCityWeatherReportRepository;
+            this.dailyWeatherReportRepository = dailyWeatherReportRepository;
         }
 
-        public async Task RetrieveDataAndBuildDailyReportForTommorrowForAllCities()
+        public async Task RetrieveDataAndBuildDailyWeatherReportForAllCities()
         {
-            var cities = await cityRepository.GetAllAsync();
+            var cities = await RetrieveCitiesAsync();
 
-            var httpRequestTasks = cities.Select(RetrieveDataAndBuildDailyReportForTommorrow);
+            var dailyWeatherReports = await BuildDailyWeahterReportForCitiesAsync(cities);
 
-            await Task.WhenAll(httpRequestTasks);
-
-            var dailyCityWeatherReports = httpRequestTasks.Select(httpRequestTask => httpRequestTask.Result);
-
-            await dailyCityWeatherReportRepository.InsertDailyCityWeatherReportsAsync(dailyCityWeatherReports);
+            await StoreDailyWeatherReportsAsync(dailyWeatherReports);
         }
 
-        private async Task<DailyCityWeatherReport> RetrieveDataAndBuildDailyReportForTommorrow(City city)
+        public async Task<List<City>> RetrieveCitiesAsync()
         {
-            var locationForecast = await metrologicalInstituteHttpClient.GetCompactLocationForcastAsync(city.Latitude, city.Longitude);
+            return await cityRepository.GetAllAsync();
+        }
 
+        public async Task<List<DailyWeatherReport>> BuildDailyWeahterReportForCitiesAsync(List<City> cities)
+        {
+            var individualCityTasks = cities.Select(city => RetrieveDataAndBuildDailyWeahterReportForCityAsync(city));
+
+            await Task.WhenAll(individualCityTasks);
+
+            return individualCityTasks.Select(individualCityTask => individualCityTask.Result).ToList();
+        }
+
+        public async Task StoreDailyWeatherReportsAsync(List<DailyWeatherReport> dailyWeatherReports)
+        {
+            await dailyWeatherReportRepository.InsertDailyWeatherReportsAsync(dailyWeatherReports);
+        }
+
+        public async Task<DailyWeatherReport> RetrieveDataAndBuildDailyWeahterReportForCityAsync(City city)
+        {
+            var locationForecast = await RetrieveLocationForecastForCityAsync(city);
+
+            var timeSeriesForTommorrow = GetTommorrowsForecastTimeSeries(locationForecast);
+
+            var temperatureUnit = ConvertMetrologicalInstituteTemperatureUnitToEnum(locationForecast.Properties.Meta.Units.Air_temperature);
+
+            return BuildDailyWeahterReportForCityAsync(timeSeriesForTommorrow, city.Name, temperatureUnit);
+        }
+
+        public async Task<LocationForecastCompactDTO> RetrieveLocationForecastForCityAsync(City city)
+        {
+            return await metrologicalInstituteHttpClient.GetCompactLocationForcastAsync(city.Latitude, city.Longitude);
+        }
+
+        public static List<LocationForecastTimeSeriesEntry> GetTommorrowsForecastTimeSeries(LocationForecastCompactDTO locationForecast)
+        {
             var tommorrow = DateTime.Now.AddDays(1).Date;
 
-            var timeSeriesForTommorrow = locationForecast.Properties.TimeSeries.Where(timeSeries => timeSeries.Time.Value.Date == tommorrow).ToList();
-
-            var temperatureUnit = ConvertMetrologicalInstituteTemperatureUnitToTemperatureUnitEnum(locationForecast.Properties.Meta.Units.Air_temperature);
-
-            return BuildDailyCityWeatherReports(timeSeriesForTommorrow, city.Name, temperatureUnit);
+            return locationForecast.Properties.TimeSeries.Where(timeSeries => timeSeries.Time.Value.Date == tommorrow).ToList();
         }
 
-        private static DailyCityWeatherReport BuildDailyCityWeatherReports(List<LocationForecastTimeSeriesEntry> timeSeries, string cityName, TemperatureUnit temperatureUnit)
+        public static TemperatureUnit ConvertMetrologicalInstituteTemperatureUnitToEnum(string temperatureUnit)
+        {
+            return temperatureUnit.ToUpper() switch
+            {
+                "K" => TemperatureUnit.Kelvin,
+                "F" => TemperatureUnit.Fahrenheit,
+                _ => TemperatureUnit.Celsius,
+            };
+        }
+
+        public static DailyWeatherReport BuildDailyWeahterReportForCityAsync(List<LocationForecastTimeSeriesEntry> timeSeries, string cityName, TemperatureUnit temperatureUnit)
         {
             var city = cityName;
             var date = timeSeries.First().Time.Value.Date;
@@ -60,7 +95,7 @@ namespace BusinessLogic.Services
             var percipitation = timeSeries.Sum(entry => entry.Data.Next_1_hours.Details.Precipitation_amount);
             var windSpeedAverage = timeSeries.Average(entry => entry.Data.Instant.Details.Wind_speed);
 
-            return new DailyCityWeatherReport
+            return new DailyWeatherReport
             {
                 City = city,
                 Date = date,
@@ -71,16 +106,6 @@ namespace BusinessLogic.Services
                 Percipitation = percipitation,
                 WindSpeedAverage = windSpeedAverage,
                 TemperatureUnit = temperatureUnit,
-            };
-        }
-
-        private static TemperatureUnit ConvertMetrologicalInstituteTemperatureUnitToTemperatureUnitEnum(string temperatureUnit)
-        {
-            return temperatureUnit.ToUpper() switch
-            {
-                "K" => TemperatureUnit.Kelvin,
-                "F" => TemperatureUnit.Fahrenheit,
-                _ => TemperatureUnit.Celsius,
             };
         }
     }
