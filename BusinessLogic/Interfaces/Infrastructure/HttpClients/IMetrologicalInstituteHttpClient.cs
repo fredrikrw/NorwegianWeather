@@ -1,6 +1,6 @@
 ﻿using BusinessLogic.Models.DTOs.Inbound;
 
-namespace BusinessLogic.Interfaces.Infrastructure
+namespace BusinessLogic.Interfaces.Infrastructure.HttpClients
 {
     public interface IMetrologicalInstituteHttpClient
     {

@@ -1,5 +1,5 @@
-﻿using BusinessLogic.Interfaces.Infrastructure;
-using BusinessLogic.Interfaces.Repositories;
+﻿using BusinessLogic.Interfaces.Infrastructure.HttpClients;
+using BusinessLogic.Interfaces.Infrastructure.Repositories;
 using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Models.DTOs.Inbound;
 using BusinessLogic.Models.Entities;

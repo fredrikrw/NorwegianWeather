@@ -1,6 +1,6 @@
 ﻿using BusinessLogic.Models.Entities;
 
-namespace BusinessLogic.Interfaces.Repositories
+namespace BusinessLogic.Interfaces.Infrastructure.Repositories
 {
     public interface IDailyCityWeatherReportRepository
     {

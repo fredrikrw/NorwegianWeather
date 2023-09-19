@@ -1,4 +1,4 @@
-﻿using BusinessLogic.Interfaces.Repositories;
+﻿using BusinessLogic.Interfaces.Infrastructure.Repositories;
 using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Models.DTOs.Outbound;
 using BusinessLogic.Models.Enums;
