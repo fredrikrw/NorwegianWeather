@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HttpApi\HttpApi.csproj" />
+  </ItemGroup>
+
 </Project>

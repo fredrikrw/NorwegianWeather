@@ -20,9 +20,11 @@ namespace BusinessLogic.Services
 
         public async Task<PeriodWeatherReportDTO> BuildPeriodWeatherReportAsync(string cityName, DateTime fromDate, DateTime toDate, TemperatureUnit requestedTemperatureUnit)
         {
-            var isCityNameInvalid = await CheckIfCityNameIsInvalidAsync(cityName);
+            var noCityDataFound = await CheckIfDataExistsForCityAsync(cityName);
+            if (noCityDataFound) throw new ArgumentException($"This service does not have any data for cityName [{cityName}]");
 
-            if (isCityNameInvalid) throw new ArgumentException($"This service does not have any data for cityName [{cityName}]");
+            var datesAreNotOrderedProperly = AreDatesImproperlyOrdered(fromDate, toDate);  
+            if(datesAreNotOrderedProperly) throw new ArgumentException($"fromDate cannot be after toDate");
 
             var dailyReports = await RetrieveDailyWeatherReportsForPeriod(cityName, fromDate, toDate);
 
@@ -31,9 +33,14 @@ namespace BusinessLogic.Services
             return BuildPeriodWeatherReport(dailyReports);
         }
 
-        public async Task<bool> CheckIfCityNameIsInvalidAsync(string cityName)
+        public async Task<bool> CheckIfDataExistsForCityAsync(string cityName)
         {
-            return (await cityRepository.Contains(cityName)) == false;
+            return string.IsNullOrEmpty(cityName) || (await cityRepository.Contains(cityName)) == false;
+        }
+
+        public static bool AreDatesImproperlyOrdered(DateTime fromDate, DateTime toDate)
+        {
+            return fromDate > toDate;
         }
 
         public async Task<List<DailyWeatherReport>> RetrieveDailyWeatherReportsForPeriod(string cityName, DateTime fromDate, DateTime toDate)
