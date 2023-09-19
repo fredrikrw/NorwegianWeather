@@ -1,9 +1,12 @@
 using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Services;
+using HttpApi.Interfaces.Validators;
+using HttpApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IWeatherReportControllerParameterValidator, WeatherReportControllerParameterValidator>();
 builder.Services.AddScoped<IWeatherReportService, WeatherReportService>();
 
 builder.Services.AddControllers();

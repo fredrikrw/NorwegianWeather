@@ -1,21 +1,22 @@
 ﻿using BusinessLogic.Models.Enums;
+using HttpApi.Interfaces.Validators;
 
 namespace HttpApi.Validators
 {
-    public class WeatherReportControllerParameterValidator
+    public class WeatherReportControllerParameterValidator : IWeatherReportControllerParameterValidator
     {
 
-        public static bool IsCityNameInvalid(string cityName)
+        public bool IsCityNameInvalid(string cityName)
         {
             return string.IsNullOrEmpty(cityName);
         }
 
-        public static bool IsDateOrderInvalid(DateTime fromDate, DateTime toDate)
+        public bool IsDateOrderInvalid(DateTime fromDate, DateTime toDate)
         {
             return fromDate.Date > toDate.Date;
         }
 
-        public static bool IsTemperatureUnitOutOfRange(TemperatureUnit temperatureUnit)
+        public bool IsTemperatureUnitOutOfRange(TemperatureUnit temperatureUnit)
         {
             return (int)temperatureUnit < 0 || (int)temperatureUnit > 2;
         }
