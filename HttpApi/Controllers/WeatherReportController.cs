@@ -2,7 +2,6 @@ using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Models.DTOs.Outbound;
 using BusinessLogic.Models.Enums;
 using HttpApi.Interfaces.Validators;
-using HttpApi.Validators;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HttpApi.Controllers
