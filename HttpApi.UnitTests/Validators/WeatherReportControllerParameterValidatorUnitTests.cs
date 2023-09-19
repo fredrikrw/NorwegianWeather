@@ -1,4 +1,4 @@
-﻿namespace HttpApi.UnitTests
+﻿namespace HttpApi.UnitTests.Validators
 {
     public class WeatherReportControllerParameterValidatorUnitTests
     {
