@@ -35,13 +35,12 @@ namespace HttpApi.UnitTests.Validators
             Assert.True(result);
         }
 
-
         [Fact]
-        public void IsCityNameInvalid_String_ShouldReturnFalse()
+        public void IsCityNameInvalid_NonEmptyString_ShouldReturnFalse()
         {
             var unitUnderTest = new WeatherReportControllerParameterValidator();
 
-            var result = unitUnderTest.IsCityNameInvalid("Oslo");
+            var result = unitUnderTest.IsCityNameInvalid("a");
 
             Assert.False(result);
         }
@@ -51,8 +50,8 @@ namespace HttpApi.UnitTests.Validators
         {
             var unitUnderTest = new WeatherReportControllerParameterValidator();
 
-            var fromDate = new DateTime(2023, 9, 19);
-            var toDate = new DateTime(2023, 9, 20);
+            var fromDate = new DateTime(2023, 9, 20);
+            var toDate = new DateTime(2023, 9, 21);
 
             var result = unitUnderTest.IsDateOrderInvalid(fromDate, toDate);
 
@@ -60,20 +59,7 @@ namespace HttpApi.UnitTests.Validators
         }
 
         [Fact]
-        public void IsDateOrderInvalid_SameDate_ShouldReturnFalse()
-        {
-            var unitUnderTest = new WeatherReportControllerParameterValidator();
-
-            var fromDate = new DateTime(2023, 9, 19);
-            var toDate = new DateTime(2023, 9, 19);
-
-            var result = unitUnderTest.IsDateOrderInvalid(fromDate, toDate);
-
-            Assert.False(result);
-        }
-
-        [Fact]
-        public void IsDateOrderInvalid_ImproperOrder_ShouldReturnTrue()
+        public void IsDateOrderInvalid_ImproperOrder_ShouldReturnFalse()
         {
             var unitUnderTest = new WeatherReportControllerParameterValidator();
 
@@ -83,6 +69,19 @@ namespace HttpApi.UnitTests.Validators
             var result = unitUnderTest.IsDateOrderInvalid(fromDate, toDate);
 
             Assert.True(result);
+        }
+
+        [Fact]
+        public void IsDateOrderInvalid_SameDate_ShouldReturnFalse()
+        {
+            var unitUnderTest = new WeatherReportControllerParameterValidator();
+
+            var fromDate = new DateTime(2023, 9, 20);
+            var toDate = new DateTime(2023, 9, 20);
+
+            var result = unitUnderTest.IsDateOrderInvalid(fromDate, toDate);
+
+            Assert.False(result);
         }
 
         [Theory]

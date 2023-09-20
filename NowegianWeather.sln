@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic.UnitTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Functions", "Functions\Functions.csproj", "{2D94419D-7B64-4DC2-8A9F-7496D4F72FF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpApi.UnitTests", "HttpApi.UnitTests\HttpApi.UnitTests.csproj", "{65F749BF-B1F3-431D-917A-E7C6B515600F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpApi.UnitTests", "HttpApi.UnitTests\HttpApi.UnitTests.csproj", "{65F749BF-B1F3-431D-917A-E7C6B515600F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.UnitTests", "Infrastructure.UnitTests\Infrastructure.UnitTests.csproj", "{C1F5735B-F07A-480B-B786-6D89A972CC66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.UnitTests", "Infrastructure.UnitTests\Infrastructure.UnitTests.csproj", "{C1F5735B-F07A-480B-B786-6D89A972CC66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

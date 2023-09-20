@@ -8,7 +8,7 @@ namespace HttpApi.Validators
 
         public bool IsCityNameInvalid(string cityName)
         {
-            return cityName is null || cityName.Trim() == "";
+            return cityName is null || cityName.Trim() == string.Empty;
         }
 
         public bool IsDateOrderInvalid(DateTime fromDate, DateTime toDate)
