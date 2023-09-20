@@ -93,17 +93,7 @@ namespace BusinessLogic.Services
             var percipitationAverage = dailyWeatherReports.Average(dailyReport => dailyReport.Percipitation);
             var windSpeedAverage = dailyWeatherReports.Average(dailyReport => dailyReport.WindSpeedAverage);
             var temperatureUnit = dailyWeatherReports.First().TemperatureUnit;
-
-            var weatherSummary = WeatherSummary.Fair;
-
-            if (numberOfDaysWithPercipitation >= (dailyWeatherReports.Count / 2) || cloudCoverAverage > 75 || windSpeedAverage >= 10)
-            {
-                weatherSummary = WeatherSummary.Bad;
-            }
-            else if (numberOfDaysWithPercipitation < (dailyWeatherReports.Count / 4) && cloudCoverAverage < 25 && windSpeedAverage < 10)
-            {
-                weatherSummary = WeatherSummary.Great;
-            }
+            var weatherSummary = SummarizeWeather(dailyWeatherReports.Count, numberOfDaysWithPercipitation, cloudCoverAverage, windSpeedAverage);
 
             return new PeriodWeatherReportDTO
             {
@@ -116,6 +106,22 @@ namespace BusinessLogic.Services
                 WindSpeedAverage = windSpeedAverage,
                 WeatherSummary = weatherSummary,
             };
+        }
+
+        public static WeatherSummary SummarizeWeather(int numberOfDays, int numberOfDaysWithPercipitation, double cloudCoverAverage, double windSpeedAverage)
+        {
+            if (numberOfDaysWithPercipitation >= (numberOfDays / 2d) || cloudCoverAverage > 75 || windSpeedAverage >= 12)
+            {
+                return WeatherSummary.Bad;
+            }
+            else if (numberOfDaysWithPercipitation < (numberOfDays / 4d) && cloudCoverAverage < 25 && windSpeedAverage < 8)
+            {
+                return WeatherSummary.Great;
+            }
+            else
+            {
+                return WeatherSummary.Fair;
+            }
         }
     }
 }
