@@ -4,7 +4,7 @@ namespace BusinessLogic.Models.Entities
 {
     public class DailyWeatherReport
     {
-        public string City { get; set; }
+        public string CityName { get; set; }
         public DateTime Date { get; set; }
         public double TemperatureMax { get; set; }
         public double TemperatureAverage { get; set; }
