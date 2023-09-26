@@ -20,11 +20,11 @@ namespace BusinessLogic.Services
 
         public async Task<PeriodWeatherReportDTO> BuildPeriodWeatherReportAsync(string cityName, DateTime fromDate, DateTime toDate, TemperatureUnit requestedTemperatureUnit)
         {
-            var noCityDataFound = await CheckIfDataExistsForCityAsync(cityName);
-            if (noCityDataFound) throw new ArgumentException($"This service does not have any data for cityName [{cityName}]");
+            var cityDataFound = await CheckIfDataExistsForCityAsync(cityName);
+            if (!cityDataFound) throw new ArgumentException($"This service does not have any data for cityName [{cityName}]");
 
-            var datesAreNotOrderedProperly = AreDatesImproperlyOrdered(fromDate, toDate);  
-            if(datesAreNotOrderedProperly) throw new ArgumentException($"fromDate cannot be after toDate");
+            var datesAreNotOrderedProperly = AreDatesImproperlyOrdered(fromDate, toDate);
+            if (datesAreNotOrderedProperly) throw new ArgumentException($"fromDate cannot be after toDate");
 
             var dailyReports = await RetrieveDailyWeatherReportsForPeriod(cityName, fromDate, toDate);
 
@@ -35,7 +35,7 @@ namespace BusinessLogic.Services
 
         public async Task<bool> CheckIfDataExistsForCityAsync(string cityName)
         {
-            return string.IsNullOrEmpty(cityName) || (await cityRepository.Contains(cityName)) == false;
+            return cityName is not null && cityName.Trim() != "" && (await cityRepository.Contains(cityName));
         }
 
         public static bool AreDatesImproperlyOrdered(DateTime fromDate, DateTime toDate)
@@ -53,6 +53,7 @@ namespace BusinessLogic.Services
             dailyWeatherReport.TemperatureMax = ConvertTemperatureToAnotherUnit(dailyWeatherReport.TemperatureMax, dailyWeatherReport.TemperatureUnit, requestedTemperatureUnit);
             dailyWeatherReport.TemperatureAverage = ConvertTemperatureToAnotherUnit(dailyWeatherReport.TemperatureAverage, dailyWeatherReport.TemperatureUnit, requestedTemperatureUnit);
             dailyWeatherReport.TemperatureMin = ConvertTemperatureToAnotherUnit(dailyWeatherReport.TemperatureMin, dailyWeatherReport.TemperatureUnit, requestedTemperatureUnit);
+            dailyWeatherReport.TemperatureUnit = requestedTemperatureUnit;
             return dailyWeatherReport;
         }
 
@@ -62,13 +63,13 @@ namespace BusinessLogic.Services
             {
                 TemperatureUnit.Fahrenheit => toUnit switch
                 {
-                    TemperatureUnit.Kelvin => (temperature * (5d / 9d)) - 241.15d,
-                    TemperatureUnit.Celsius => (temperature * (5d / 9d)) - 32d,
+                    TemperatureUnit.Kelvin => (5d / 9d * (temperature - 32d)) + 273.15d,
+                    TemperatureUnit.Celsius => (temperature - 32d) * 5d / 9d,
                     _ => temperature,
                 },
                 TemperatureUnit.Kelvin => toUnit switch
                 {
-                    TemperatureUnit.Fahrenheit => (temperature * (9d / 5d)) - 241.15d,
+                    TemperatureUnit.Fahrenheit => ((temperature - 273.15) * 9d / 5d) + 32,
                     TemperatureUnit.Celsius => temperature - 273.15d,
                     _ => temperature,
                 },
@@ -92,17 +93,7 @@ namespace BusinessLogic.Services
             var percipitationAverage = dailyWeatherReports.Average(dailyReport => dailyReport.Percipitation);
             var windSpeedAverage = dailyWeatherReports.Average(dailyReport => dailyReport.WindSpeedAverage);
             var temperatureUnit = dailyWeatherReports.First().TemperatureUnit;
-
-            var weatherSummary = WeatherSummary.Fair;
-
-            if (numberOfDaysWithPercipitation >= (dailyWeatherReports.Count / 2) || cloudCoverAverage > 75 || windSpeedAverage >= 10)
-            {
-                weatherSummary = WeatherSummary.Bad;
-            }
-            else if (numberOfDaysWithPercipitation < (dailyWeatherReports.Count / 4) && cloudCoverAverage < 25 && windSpeedAverage < 10)
-            {
-                weatherSummary = WeatherSummary.Great;
-            }
+            var weatherSummary = SummarizeWeather(dailyWeatherReports.Count, numberOfDaysWithPercipitation, cloudCoverAverage, windSpeedAverage);
 
             return new PeriodWeatherReportDTO
             {
@@ -115,6 +106,22 @@ namespace BusinessLogic.Services
                 WindSpeedAverage = windSpeedAverage,
                 WeatherSummary = weatherSummary,
             };
+        }
+
+        public static WeatherSummary SummarizeWeather(int numberOfDays, int numberOfDaysWithPercipitation, double cloudCoverAverage, double windSpeedAverage)
+        {
+            if (numberOfDaysWithPercipitation >= (numberOfDays / 2d) || cloudCoverAverage > 75 || windSpeedAverage >= 12)
+            {
+                return WeatherSummary.Bad;
+            }
+            else if (numberOfDaysWithPercipitation < (numberOfDays / 4d) && cloudCoverAverage < 25 && windSpeedAverage < 8)
+            {
+                return WeatherSummary.Great;
+            }
+            else
+            {
+                return WeatherSummary.Fair;
+            }
         }
     }
 }

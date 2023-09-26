@@ -57,7 +57,7 @@ namespace BusinessLogic.Services
 
             var timeSeriesForTommorrow = GetTommorrowsForecastTimeSeries(locationForecast);
 
-            var temperatureUnit = ConvertMetrologicalInstituteTemperatureUnitToEnum(locationForecast.Properties.Meta.Units.Air_temperature);
+            var temperatureUnit = ConvertMetrologicalInstituteTemperatureUnitToEnum(locationForecast.Properties?.Meta?.Units?.Air_temperature);
 
             return BuildDailyWeahterReportForCityAsync(timeSeriesForTommorrow, city.Name, temperatureUnit);
         }
@@ -71,11 +71,13 @@ namespace BusinessLogic.Services
         {
             var tommorrow = DateTime.Now.AddDays(1).Date;
 
-            return locationForecast.Properties.TimeSeries.Where(timeSeries => timeSeries.Time.Value.Date == tommorrow).ToList();
+            return locationForecast?.Properties?.TimeSeries?.Where(timeSeries => timeSeries.Time.HasValue && timeSeries.Time.Value.Date == tommorrow).ToList() ?? new List<LocationForecastTimeSeriesEntry>();
         }
 
         public static TemperatureUnit ConvertMetrologicalInstituteTemperatureUnitToEnum(string temperatureUnit)
         {
+            if (string.IsNullOrEmpty(temperatureUnit)) return TemperatureUnit.Celsius;
+
             return temperatureUnit.ToUpper() switch
             {
                 "K" => TemperatureUnit.Kelvin,
@@ -86,8 +88,7 @@ namespace BusinessLogic.Services
 
         public static DailyWeatherReport BuildDailyWeahterReportForCityAsync(List<LocationForecastTimeSeriesEntry> timeSeries, string cityName, TemperatureUnit temperatureUnit)
         {
-            var city = cityName;
-            var date = timeSeries.First().Time.Value.Date;
+            var date = timeSeries.First(timeSeriesEntry => timeSeriesEntry.Time.HasValue).Time.Value.Date;
             var temperatureMax = timeSeries.Max(entry => entry.Data.Instant.Details.Air_temperature);
             var temperatureAverage = timeSeries.Average(entry => entry.Data.Instant.Details.Air_temperature);
             var temperatureMin = timeSeries.Min(entry => entry.Data.Instant.Details.Air_temperature);
@@ -97,7 +98,7 @@ namespace BusinessLogic.Services
 
             return new DailyWeatherReport
             {
-                City = city,
+                CityName = cityName,
                 Date = date,
                 TemperatureMax = temperatureMax,
                 TemperatureAverage = temperatureAverage,
