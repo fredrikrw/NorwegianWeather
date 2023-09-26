@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[City]
+(
+	[Name] VARCHAR(200) NOT NULL PRIMARY KEY,
+	[Latitude] FLOAT NOT NULL,
+	[Longitude] FLOAT NOT NULL 
+)
