@@ -1,9 +1,9 @@
 ﻿using BusinessLogic.Interfaces.Infrastructure.Repositories;
 using BusinessLogic.Models.Entities;
 using Infrastructure.Models.Options;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using RepoDb;
-using System.Data.SqlClient;
 
 namespace Infrastructure.Repositories
 {

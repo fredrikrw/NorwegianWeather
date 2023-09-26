@@ -5,8 +5,11 @@ using HttpApi.Interfaces.Validators;
 using HttpApi.Validators;
 using Infrastructure.Models.Options;
 using Infrastructure.Repositories;
+using RepoDb;
 
 var builder = WebApplication.CreateBuilder(args);
+
+GlobalConfiguration.Setup().UseSqlServer();
 
 // Add services to the container.
 builder.Services.AddSingleton<IWeatherReportControllerParameterValidator, WeatherReportControllerParameterValidator>();
