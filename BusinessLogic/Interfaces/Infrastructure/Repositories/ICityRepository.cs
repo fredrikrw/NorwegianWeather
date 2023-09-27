@@ -4,7 +4,7 @@ namespace BusinessLogic.Interfaces.Infrastructure.Repositories
 {
     public interface ICityRepository
     {
-        public Task<bool> Contains(string cityName);
+        public Task<bool> ContainsAsync(string cityName);
         public Task<List<City>> GetAllAsync();
     }
 }

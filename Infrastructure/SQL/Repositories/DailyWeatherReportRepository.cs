@@ -5,19 +5,26 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using RepoDb;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.SQL.Repositories
 {
     public class DailyWeatherReportRepository : IDailyWeatherReportRepository
     {
-        private readonly IOptions<SqlClientOptions> options;
+        private readonly DateTime MinimumAllowedRequestDate = new DateTime(2023, 1, 1);
 
-        public DailyWeatherReportRepository(IOptions<SqlClientOptions> options)
+        private readonly IOptions<SqlConnectionOptions> options;
+
+        public DailyWeatherReportRepository(IOptions<SqlConnectionOptions> options)
         {
             this.options = options;
         }
 
         public async Task<List<DailyWeatherReport>> GetDailyWeatherReportsAsync(string cityName, DateTime fromDate, DateTime toDate)
         {
+            if (string.IsNullOrEmpty(cityName)) return new List<DailyWeatherReport>();
+
+            if (fromDate < MinimumAllowedRequestDate) fromDate = MinimumAllowedRequestDate;
+            if (toDate < MinimumAllowedRequestDate) toDate = MinimumAllowedRequestDate;
+
             using var connection = new SqlConnection(options.Value.ConnectionString);
 
             var dailyWeatherReports = await connection.QueryAsync<DailyWeatherReport>(dailyWeatherReport =>
@@ -30,6 +37,8 @@ namespace Infrastructure.Repositories
 
         public async Task InsertDailyWeatherReportsAsync(List<DailyWeatherReport> dailyWeatherReports)
         {
+            if(dailyWeatherReports is null || dailyWeatherReports.Count == 0) return;
+
             using var connection = new SqlConnection(options.Value.ConnectionString);
 
             await connection.InsertAllAsync(dailyWeatherReports);

@@ -86,7 +86,7 @@ namespace BusinessLogic.UnitTests.Services
         {
             var cityRepository = new Mock<ICityRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(false));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
 
             var unitUnderTest = new WeatherReportService(cityRepository.Object, null);
 
@@ -100,7 +100,7 @@ namespace BusinessLogic.UnitTests.Services
         {
             var cityRepository = new Mock<ICityRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
 
             var unitUnderTest = new WeatherReportService(cityRepository.Object, null);
 
@@ -308,7 +308,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -329,7 +329,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -350,7 +350,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(false));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -371,7 +371,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -392,7 +392,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -413,7 +413,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -434,7 +434,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -455,7 +455,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -476,7 +476,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -497,7 +497,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -518,7 +518,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -539,7 +539,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 
@@ -560,7 +560,7 @@ namespace BusinessLogic.UnitTests.Services
             var cityRepository = new Mock<ICityRepository>();
             var dailyWeatherReportRepository = new Mock<IDailyWeatherReportRepository>();
 
-            cityRepository.Setup(cityRepository => cityRepository.Contains(It.IsAny<string>())).Returns(Task.FromResult(true));
+            cityRepository.Setup(cityRepository => cityRepository.ContainsAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             dailyWeatherReportRepository.Setup(dailyWeatherReportRepository => dailyWeatherReportRepository.GetDailyWeatherReportsAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(dailyWeatherReports));
 

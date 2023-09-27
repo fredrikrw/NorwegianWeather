@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Models.Options
 {
-    public class SqlClientOptions
+    public class SqlConnectionOptions
     {
         public string ConnectionString { get; set; }
     }

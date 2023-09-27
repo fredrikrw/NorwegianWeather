@@ -5,19 +5,21 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using RepoDb;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.SQL.Repositories
 {
     public class CityRepository : ICityRepository
     {
-        private readonly IOptions<SqlClientOptions> options;
+        private readonly IOptions<SqlConnectionOptions> options;
 
-        public CityRepository(IOptions<SqlClientOptions> options)
+        public CityRepository(IOptions<SqlConnectionOptions> options)
         {
             this.options = options;
         }
 
-        public async Task<bool> Contains(string cityName)
+        public async Task<bool> ContainsAsync(string cityName)
         {
+            if (string.IsNullOrEmpty(cityName)) return false;
+
             using var connection = new SqlConnection(options.Value.ConnectionString);
 
             return await connection.ExistsAsync<City>(cityName);

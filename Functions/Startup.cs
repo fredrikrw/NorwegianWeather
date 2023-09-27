@@ -3,10 +3,10 @@ using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Services;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Infrastructure.Repositories;
 using Infrastructure.Models.Options;
 using Microsoft.Extensions.Configuration;
 using RepoDb;
+using Infrastructure.SQL.Repositories;
 
 [assembly: FunctionsStartup(typeof(Functions.Startup))]
 
@@ -22,9 +22,9 @@ namespace Functions
             builder.Services.AddScoped<ICityRepository, CityRepository>();
             builder.Services.AddScoped<IDailyWeatherReportRepository, DailyWeatherReportRepository>();
 
-            builder.Services.AddOptions<SqlClientOptions>().Configure<IConfiguration>((settings, configuration) =>
+            builder.Services.AddOptions<SqlConnectionOptions>().Configure<IConfiguration>((settings, configuration) =>
             {
-                configuration.GetSection("SqlClientOptions").Bind(settings);
+                configuration.GetSection("SqlConnectionOptions").Bind(settings);
             });
         }
     }

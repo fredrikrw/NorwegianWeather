@@ -35,7 +35,7 @@ namespace BusinessLogic.Services
 
         public async Task<bool> CheckIfDataExistsForCityAsync(string cityName)
         {
-            return cityName is not null && cityName.Trim() != "" && (await cityRepository.Contains(cityName));
+            return cityName is not null && cityName.Trim() != "" && (await cityRepository.ContainsAsync(cityName));
         }
 
         public static bool AreDatesImproperlyOrdered(DateTime fromDate, DateTime toDate)
