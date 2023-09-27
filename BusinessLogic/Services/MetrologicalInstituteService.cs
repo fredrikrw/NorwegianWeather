@@ -57,7 +57,7 @@ namespace BusinessLogic.Services
 
             var timeSeriesForTommorrow = GetTommorrowsForecastTimeSeries(locationForecast);
 
-            var temperatureUnit = ConvertMetrologicalInstituteTemperatureUnitToEnum(locationForecast.Properties?.Meta?.Units?.Air_temperature);
+            var temperatureUnit = ConvertMetrologicalInstituteTemperatureUnitToEnum(locationForecast.Properties?.Meta?.Units?.AirTemperature);
 
             return BuildDailyWeahterReportForCityAsync(timeSeriesForTommorrow, city.Name, temperatureUnit);
         }
@@ -89,12 +89,12 @@ namespace BusinessLogic.Services
         public static DailyWeatherReport BuildDailyWeahterReportForCityAsync(List<LocationForecastTimeSeriesEntry> timeSeries, string cityName, TemperatureUnit temperatureUnit)
         {
             var date = timeSeries.First(timeSeriesEntry => timeSeriesEntry.Time.HasValue).Time.Value.Date;
-            var temperatureMax = timeSeries.Max(entry => entry.Data.Instant.Details.Air_temperature);
-            var temperatureAverage = timeSeries.Average(entry => entry.Data.Instant.Details.Air_temperature);
-            var temperatureMin = timeSeries.Min(entry => entry.Data.Instant.Details.Air_temperature);
-            var cloudCoverAverage = timeSeries.Average(entry => entry.Data.Instant.Details.Cloud_area_fraction);
-            var percipitation = timeSeries.Sum(entry => entry.Data.Next_1_hours.Details.Precipitation_amount);
-            var windSpeedAverage = timeSeries.Average(entry => entry.Data.Instant.Details.Wind_speed);
+            var temperatureMax = timeSeries.Max(entry => entry.Data.Instant.Details.AirTemperature);
+            var temperatureAverage = timeSeries.Average(entry => entry.Data.Instant.Details.AirTemperature);
+            var temperatureMin = timeSeries.Min(entry => entry.Data.Instant.Details.AirTemperature);
+            var cloudCoverAverage = timeSeries.Average(entry => entry.Data.Instant.Details.CloudAreaFraction);
+            var percipitation = timeSeries.Sum(entry => entry.Data.NextHour.Details.PrecipitationAmount);
+            var windSpeedAverage = timeSeries.Average(entry => entry.Data.Instant.Details.WindSpeed);
 
             return new DailyWeatherReport
             {

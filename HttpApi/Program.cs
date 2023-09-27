@@ -1,8 +1,10 @@
+using BusinessLogic.Interfaces.Infrastructure.HttpClients;
 using BusinessLogic.Interfaces.Infrastructure.Repositories;
 using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Services;
 using HttpApi.Interfaces.Validators;
 using HttpApi.Validators;
+using Infrastructure.HttpClients;
 using Infrastructure.Models.Options;
 using Infrastructure.SQL.Repositories;
 using RepoDb;
@@ -16,8 +18,10 @@ builder.Services.AddScoped<IWeatherReportControllerParameterValidator, WeatherRe
 builder.Services.AddScoped<IWeatherReportService, WeatherReportService>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IDailyWeatherReportRepository, DailyWeatherReportRepository>();
+builder.Services.AddScoped<IMetrologicalInstituteHttpClient, MetrologicalInstituteHttpClient>();
 
 builder.Services.Configure<SqlConnectionOptions>(builder.Configuration.GetSection("SqlConnectionOptions"));
+builder.Services.Configure<MetrologicalInstituteHttpClientOptions>(builder.Configuration.GetSection("MetrologicalInstituteHttpClientOptions"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

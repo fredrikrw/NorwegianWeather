@@ -1,9 +1,8 @@
-﻿using BusinessLogic.Interfaces.Infrastructure.Repositories;
+﻿using BusinessLogic.Interfaces.Infrastructure.HttpClients;
+using BusinessLogic.Interfaces.Infrastructure.Repositories;
 using BusinessLogic.Models.Entities;
 using BusinessLogic.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
-
-
 
 namespace HttpApi.Controllers
 {
@@ -13,14 +12,30 @@ namespace HttpApi.Controllers
     {
         private readonly ICityRepository cityRepository;
         private readonly IDailyWeatherReportRepository dailyWeatherReportRepository;
+        private readonly IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient;
 
-        public TestController(ICityRepository cityRepository, IDailyWeatherReportRepository dailyWeatherReportRepository)
+        public TestController(
+            ICityRepository cityRepository, 
+            IDailyWeatherReportRepository dailyWeatherReportRepository,
+            IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient)
         {
             this.cityRepository = cityRepository;
             this.dailyWeatherReportRepository = dailyWeatherReportRepository;
+            this.metrologicalInstituteHttpClient = metrologicalInstituteHttpClient;
         }
 
-        [HttpGet(Name = "Test")]
+
+        [HttpGet("TestMetInstitute")]
+        public async Task<dynamic> TestMetInstitute()
+        {
+            var city = (await cityRepository.GetAllAsync()).FirstOrDefault(city => city.Name == "Kristiansand");
+
+            var locationForecastCompactDTO = await metrologicalInstituteHttpClient.GetCompactLocationForcastAsync(city.Latitude, city.Longitude);
+
+            return new { cityName = city.Name, locationForecastCompactDTO };
+        }
+
+        [HttpGet("Test")]
         public async Task<dynamic> Test()
         {
             var contains = await cityRepository.ContainsAsync("Kristiansand");
