@@ -23,7 +23,7 @@ namespace Infrastructure.HttpClients
 
             var message = new HttpRequestMessage(HttpMethod.Get, url);
 
-            message.Headers.TryAddWithoutValidation("User-Agent", "NowegianWeather/1.0 github.com/fredrikrw/NowegianWeather");
+            message.Headers.TryAddWithoutValidation("User-Agent", options.Value.UserAgent);
 
             var result = await httpClient.SendAsync(message);
 
