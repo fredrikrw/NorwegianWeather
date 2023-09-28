@@ -2,8 +2,8 @@
 {
     public enum WeatherSummary
     {
-        Fair,
         Great,
+        Fair,
         Bad
     }
 }

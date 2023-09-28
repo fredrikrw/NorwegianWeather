@@ -18,7 +18,10 @@ builder.Services.AddScoped<IWeatherReportControllerParameterValidator, WeatherRe
 builder.Services.AddScoped<IWeatherReportService, WeatherReportService>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IDailyWeatherReportRepository, DailyWeatherReportRepository>();
+
 builder.Services.AddScoped<IMetrologicalInstituteHttpClient, MetrologicalInstituteHttpClient>();
+builder.Services.AddScoped<IMetrologicalInstituteService, MetrologicalInstituteService>();
+
 
 builder.Services.Configure<SqlConnectionOptions>(builder.Configuration.GetSection("SqlConnectionOptions"));
 builder.Services.Configure<MetrologicalInstituteHttpClientOptions>(builder.Configuration.GetSection("MetrologicalInstituteHttpClientOptions"));

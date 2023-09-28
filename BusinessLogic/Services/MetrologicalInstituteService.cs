@@ -81,7 +81,9 @@ namespace BusinessLogic.Services
             return temperatureUnit.ToUpper() switch
             {
                 "K" => TemperatureUnit.Kelvin,
+                "KELVIN" => TemperatureUnit.Kelvin,
                 "F" => TemperatureUnit.Fahrenheit,
+                "FAHRENHEIT" => TemperatureUnit.Fahrenheit,
                 _ => TemperatureUnit.Celsius,
             };
         }

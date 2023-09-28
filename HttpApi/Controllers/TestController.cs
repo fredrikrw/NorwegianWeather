@@ -1,7 +1,6 @@
 ﻿using BusinessLogic.Interfaces.Infrastructure.HttpClients;
 using BusinessLogic.Interfaces.Infrastructure.Repositories;
-using BusinessLogic.Models.Entities;
-using BusinessLogic.Models.Enums;
+using BusinessLogic.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HttpApi.Controllers
@@ -13,26 +12,35 @@ namespace HttpApi.Controllers
         private readonly ICityRepository cityRepository;
         private readonly IDailyWeatherReportRepository dailyWeatherReportRepository;
         private readonly IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient;
+        private readonly IMetrologicalInstituteService metrologicalInstituteService;
 
         public TestController(
             ICityRepository cityRepository, 
             IDailyWeatherReportRepository dailyWeatherReportRepository,
-            IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient)
+            IMetrologicalInstituteHttpClient metrologicalInstituteHttpClient,
+            IMetrologicalInstituteService metrologicalInstituteService)
         {
             this.cityRepository = cityRepository;
             this.dailyWeatherReportRepository = dailyWeatherReportRepository;
             this.metrologicalInstituteHttpClient = metrologicalInstituteHttpClient;
+            this.metrologicalInstituteService = metrologicalInstituteService;
         }
+        
 
-
-        [HttpGet("TestMetInstitute")]
-        public async Task<dynamic> TestMetInstitute()
+        [HttpGet("TestHttpClient")]
+        public async Task<dynamic> TestHttpClient()
         {
             var city = (await cityRepository.GetAllAsync()).FirstOrDefault(city => city.Name == "Kristiansand");
 
             var locationForecastCompactDTO = await metrologicalInstituteHttpClient.GetCompactLocationForcastAsync(city.Latitude, city.Longitude);
 
             return new { cityName = city.Name, locationForecastCompactDTO };
+        }
+
+        [HttpGet("TestMetInstitute")]
+        public async Task TestMetInstitute()
+        {
+            await metrologicalInstituteService.RetrieveDataAndBuildDailyWeatherReportForAllCities();
         }
 
         [HttpGet("Test")]
