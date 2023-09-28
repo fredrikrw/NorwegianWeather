@@ -19,16 +19,16 @@ namespace BusinessLogic.UnitTests.Services
                         {
                             Details = new LocationForecastInstantDetails
                             {
-                                Air_temperature = 20,
-                                Cloud_area_fraction = 50,
-                                Wind_speed = 10
+                                AirTemperature = 20,
+                                CloudAreaFraction = 50,
+                                WindSpeed = 10
                             }
 },
-                        Next_1_hours = new LocationForecastNext1Hours
+                        NextHour = new LocationForecastNext1Hours
                         {
                             Details = new LocationForecastNext1HoursDetails
                             {
-                                Precipitation_amount = 30,
+                                PrecipitationAmount = 30,
                             }
                         }
                     }
@@ -42,16 +42,16 @@ namespace BusinessLogic.UnitTests.Services
                         {
                             Details = new LocationForecastInstantDetails
                             {
-                                Air_temperature = 40,
-                                Cloud_area_fraction = 100,
-                                Wind_speed = 20
+                                AirTemperature = 40,
+                                CloudAreaFraction = 100,
+                                WindSpeed = 20
                             }
                         },
-                        Next_1_hours = new LocationForecastNext1Hours
+                        NextHour = new LocationForecastNext1Hours
                         {
                             Details = new LocationForecastNext1HoursDetails
                             {
-                                Precipitation_amount = 60,
+                                PrecipitationAmount = 60,
                             }
                         }
                     }
@@ -316,16 +316,16 @@ namespace BusinessLogic.UnitTests.Services
                         {
                             Details = new LocationForecastInstantDetails
                             {
-                                Air_temperature = 20,
-                                Cloud_area_fraction = 50,
-                                Wind_speed = 10
+                                AirTemperature = 20,
+                                CloudAreaFraction = 50,
+                                WindSpeed = 10
                             }
                         },
-                        Next_1_hours = new LocationForecastNext1Hours
+                        NextHour = new LocationForecastNext1Hours
                         {
                             Details = new LocationForecastNext1HoursDetails
                             {
-                                Precipitation_amount = 30,
+                                PrecipitationAmount = 30,
                             }
                         }
                     }
@@ -339,16 +339,16 @@ namespace BusinessLogic.UnitTests.Services
                         {
                             Details = new LocationForecastInstantDetails
                             {
-                                Air_temperature = 40,
-                                Cloud_area_fraction = 100,
-                                Wind_speed = 20
+                                AirTemperature = 40,
+                                CloudAreaFraction = 100,
+                                WindSpeed = 20
                             }
                         },
-                        Next_1_hours = new LocationForecastNext1Hours
+                        NextHour = new LocationForecastNext1Hours
                         {
                             Details = new LocationForecastNext1HoursDetails
                             {
-                                Precipitation_amount = 60,
+                                PrecipitationAmount = 60,
                             }
                         }
                     }
@@ -376,16 +376,16 @@ namespace BusinessLogic.UnitTests.Services
                         {
                             Details = new LocationForecastInstantDetails
                             {
-                                Air_temperature = 20,
-                                Cloud_area_fraction = 50,
-                                Wind_speed = 10
+                                AirTemperature = 20,
+                                CloudAreaFraction = 50,
+                                WindSpeed = 10
                             }
 },
-                        Next_1_hours = new LocationForecastNext1Hours
+                        NextHour = new LocationForecastNext1Hours
                         {
                             Details = new LocationForecastNext1HoursDetails
                             {
-                                Precipitation_amount = 30,
+                                PrecipitationAmount = 30,
                             }
                         }
                     }
@@ -398,16 +398,16 @@ namespace BusinessLogic.UnitTests.Services
                         {
                             Details = new LocationForecastInstantDetails
                             {
-                                Air_temperature = 40,
-                                Cloud_area_fraction = 100,
-                                Wind_speed = 20
+                                AirTemperature = 40,
+                                CloudAreaFraction = 100,
+                                WindSpeed = 20
                             }
                         },
-                        Next_1_hours = new LocationForecastNext1Hours
+                        NextHour = new LocationForecastNext1Hours
                         {
                             Details = new LocationForecastNext1HoursDetails
                             {
-                                Precipitation_amount = 60,
+                                PrecipitationAmount = 60,
                             }
                         }
                     }
