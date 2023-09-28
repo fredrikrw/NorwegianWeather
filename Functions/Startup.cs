@@ -22,9 +22,14 @@ namespace Functions
             builder.Services.AddScoped<ICityRepository, CityRepository>();
             builder.Services.AddScoped<IDailyWeatherReportRepository, DailyWeatherReportRepository>();
 
-            builder.Services.AddOptions<SqlConnectionOptions>().Configure<IConfiguration>((settings, configuration) =>
+            builder.Services.AddOptions<SqlConnectionOptions>().Configure<IConfiguration>((options, configuration) =>
             {
-                configuration.GetSection("SqlConnectionOptions").Bind(settings);
+                configuration.GetSection("SqlConnectionOptions").Bind(options);
+            });
+
+            builder.Services.AddOptions<MetrologicalInstituteHttpClientOptions>().Configure<IConfiguration>((options, configuration) =>
+            {
+                configuration.GetSection("MetrologicalInstituteHttpClientOptions").Bind(options);
             });
         }
     }

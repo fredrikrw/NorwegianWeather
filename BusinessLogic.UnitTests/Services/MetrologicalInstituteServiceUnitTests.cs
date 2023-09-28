@@ -79,7 +79,7 @@ namespace BusinessLogic.UnitTests.Services
                                 {
                                     Units = new LocationForecastUnits
                                     {
-                                        Air_temperature = "f",
+                                        AirTemperature = "f",
                                     }
                                 },
                                 TimeSeries = timeSeries
