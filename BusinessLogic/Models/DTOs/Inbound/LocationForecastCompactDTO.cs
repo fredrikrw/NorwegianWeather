@@ -12,6 +12,7 @@ namespace BusinessLogic.Models.DTOs.Inbound
     {
         [JsonPropertyName("meta")]
         public LocationForecastMetaData Meta { get; set; }
+
         [JsonPropertyName("timeseries")]
         public List<LocationForecastTimeSeriesEntry> TimeSeries { get; set; }
     }
@@ -32,6 +33,7 @@ namespace BusinessLogic.Models.DTOs.Inbound
     {
         [JsonPropertyName("time")]
         public DateTime? Time { get; set; }
+
         [JsonPropertyName("data")]
         public LocationForecastTimeSeriesEntryData Data { get; set; }
     }
@@ -40,6 +42,7 @@ namespace BusinessLogic.Models.DTOs.Inbound
     {
         [JsonPropertyName("instant")]
         public LocationForecastInstant Instant { get; set; }
+
         [JsonPropertyName("next_1_hours")]
         public LocationForecastNext1Hours NextHour { get; set; }
     }
@@ -54,8 +57,10 @@ namespace BusinessLogic.Models.DTOs.Inbound
     {
         [JsonPropertyName("air_temperature")]
         public double AirTemperature { get; set; }
+
         [JsonPropertyName("cloud_area_fraction")]
         public double CloudAreaFraction { get; set; }
+
         [JsonPropertyName("wind_speed")]
         public double WindSpeed { get; set; }
     }
